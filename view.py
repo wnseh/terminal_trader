@@ -28,13 +28,21 @@ def create_menu():
     c = input("How much money you will invest:\n")
     return a,b,c
 
+def fund_menu():
+    head()
+    a = float(input("How much money would you like to fund to your account?:\n"))
+    if a >= 0:
+        return True, a
+    else:
+        return False, a
+
 def head():
     os.system('clear')
     os.system('cowsay -f vader "Terminal Trader\n" | lolcat')
 
 def main_menu():
     head()
-    print('[b] Buy\n[s] Sell\n[l] Lookup\n[q] Quote\n[e] Exit\n')
+    print('[f] Fund\n[b] Buy\n[s] Sell\n[l] Lookup\n[q] Quote\n[d] Display\n[e] Exit\n')
     #print('[b] Buy\n[s] Sell\n[l] Lookup\n[q] Quote\n[d] Display\n[e] Exit\n')
     return input(">MAIN> ")
 

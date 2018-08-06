@@ -69,13 +69,15 @@ def game_loop():
                 time.sleep(3)
 
     while condition:
+        fund_inputs = ['f', 'fund']
         buy_inputs = ['b', 'buy']
         sell_inputs = ['s', 'sell']
         lookup_inputs = ['l', 'lookup']
         quote_inputs = ['q', 'quote']
         display_inputs = ['d', 'display']
         exit_inputs = ['e', 'exit']
-        acceptable_inputs = buy_inputs     \
+        acceptable_inputs = fund_inputs    \
+                            +buy_inputs    \
                             +sell_inputs   \
                             +lookup_inputs \
                             +quote_inputs  \
@@ -83,7 +85,14 @@ def game_loop():
                             +exit_inputs
         user_input = view.main_menu()
         if user_input in acceptable_inputs:
-            if user_input in buy_inputs:
+            if user_input in fund_inputs:
+                confirmation, fund_amount = view.fund_menu() #TODO add fund_menu to view
+                if confirmation:
+                    return_balance = model.fund(fund_amount, current_username) #TODO add fund to model
+                    print("Your current balance is: $%.2f"%(return_balance))
+                else:
+                    print("You entered a invalid input. Please try again.")
+            elif user_input in buy_inputs:
                 (ticker_symbol, trade_volume) = view.buy_menu()
                 confirmation_message, return_list = model.buy(current_username, ticker_symbol, trade_volume)
                 if confirmation_message == True:

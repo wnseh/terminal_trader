@@ -6,11 +6,26 @@ import sqlite3
 
 import requests
 
-connection = sqlite3.connect('trade_information.db',check_same_thread=False)
-cursor = connection.cursor()
+
 database = 'trade_information.db'
 
+def fund(amount, username):
+    connection = sqlite3.connect('trade_information.db',check_same_thread=False)
+    cursor = connection.cursor()
+    query = 'SELECT current_balance FROM user WHERE username = "{}";'.format(username)
+    cursor.execute(query)
+    fetched_result = cursor.fetchone()
+    prev_balance = float(fetched_result[0])
+    amount += prev_balance
+    query = 'UPDATE user SET current_balance = {} WHERE username = "{}";'.format(amount, username)
+    cursor.execute(query)
+    connection.commit()
+    connection.close()
+    return amount
+
 def log_in(user_name,password):
+    connection = sqlite3.connect('trade_information.db',check_same_thread=False)
+    cursor = connection.cursor()
     query = 'SELECT count(*) FROM user WHERE username = "{}" AND password = "{}";'.format(user_name, password)
     cursor.execute(query)
     result_tuple = cursor.fetchone()
@@ -22,6 +37,8 @@ def log_in(user_name,password):
         pass
 
 def create_(new_user,new_password,new_fund):
+    connection = sqlite3.connect('trade_information.db',check_same_thread=False)
+    cursor = connection.cursor()
     cursor.execute(
         """INSERT INTO user(
             username,
@@ -40,6 +57,10 @@ def create_(new_user,new_password,new_fund):
 def display(username):
     connection = sqlite3.connect(database, check_same_thread=False)
     cursor = connection.cursor()
+    query = 'SELECT current_balance FROM user WHERE username = "{}";'.format(username)
+    cursor.execute(query)
+    balance = cursor.fetchone()
+    print("Current Balance: $ %.2f"%( balance[0]))
     query = '''SELECT count(*) FROM holdings WHERE username = "{}";'''.format(username)
     cursor.execute(query)
     havestock = cursor.fetchone()
